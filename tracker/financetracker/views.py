@@ -3,4 +3,4 @@ from django.http import HttpResponse
 
 
 def testview(request):
-    return HttpResponse('hello world')
+    return render(request, 'financetracker/index.html')

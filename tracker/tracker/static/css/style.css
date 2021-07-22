@@ -1,0 +1,184 @@
+/*GENERAL RULES*/
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-image: url('../images/background.jpeg');
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+img {
+    max-width: 100%;
+    height: auto
+}
+
+section {
+    padding: 50px 0;
+}
+
+
+/*HEADER*/
+
+header {
+    background-color: #646968;
+    height: 70px;
+}
+
+.header-title{
+    margin-top: 7px;
+}
+
+.header-title a {
+    color: #eee;
+}
+
+.header-auth{
+    text-align: right;
+    position: relative;
+    top: 15px;
+}
+
+/*SIDEBAR*/
+
+.sidebar-item__link li{
+    background-color: #c7c8d4;
+    color: #000;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.sidebar-item__link {
+    border-radius: 5px
+}
+
+.sidebar-item__link li.active{
+    background-color: #f5cf45;
+    color: #000;
+    text-transform: uppercase;
+    text-align: center;
+    border-color: #f5cf45;
+    font-weight: 600;
+    border-color: #c9b03e;
+}
+
+.sidebar-item__link li:hover {
+    box-shadow: 0 .125rem .25rem black;
+    transition-duration: 0.3s;
+}
+
+/*PAGE 1 MAIN PART*/
+
+
+.main-title{
+    font-size: 50px
+}
+
+
+.page_1-paragraph_1 a{
+    color: blue
+}
+
+section.main{
+    margin-top: 50px;
+}
+
+.main-text{
+    margin-top: -10px
+}
+
+.explore_list li{
+    list-style-type: none;
+}
+
+.explore_list li:before{
+    content: '✓';
+    color: green;
+    font-weight: 600;
+    font-size: 25px;
+    padding-right: 10px;
+}
+
+.footer{
+    background-color: #343434;
+    margin-top: 50px;
+}
+
+.footer a{
+    text-decoration: none;
+    transition: all .3s;
+}
+
+.footer a, .footer li{
+    color: #c8c8c8;
+}
+
+.footer a:hover{
+    color: #fff;
+    text-decoration: underline;
+
+}
+
+.footer h4{
+    color: #ccc;
+    text-transform: uppercase;
+    font-size: 16px;
+    border-bottom: 1px solid #666;
+    padding-bottom: 2px;
+}
+
+.footer li a{
+    display: block;
+}
+
+.footer-icons a{
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*MEDIA QUERIES*/
+
+@media (max-width: 600px){
+    .signup{
+        height: auto;
+        font-size: 12px;
+    }
+
+    .signin{
+        height: auto;
+        font-size: 12px;
+    }
+
+    .header-auth{
+        top: 18px;
+    }
+
+    .header-title{
+        margin-top: 14px;
+    }
+}
+
+
