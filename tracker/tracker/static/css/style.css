@@ -19,6 +19,9 @@ section {
     padding: 50px 0;
 }
 
+.alert{
+    text-align: center;
+}
 
 /*HEADER*/
 
@@ -142,19 +145,205 @@ section.main{
 
 
 
+.carousel-inner{
+    max-height: 600px;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: #000;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon{
+    background-color: #000;
+}
+
+.username{
+    color: #fff;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 16px;
+}
 
 
 
+/* PAGE 2 REGISTER */
+
+.main-content{
+    width: 50%;
+    margin: 0 auto;
+}
+
+.register-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.lil{
+    margin-bottom: 300px;
+}
+
+.form-control {
+    margin-bottom: 20px;
+}
+
+.register-form{
+    /*margin-top: 5px;*/
+}
+
+.register-link{
+    color: black;
+    float: right;
+}
+
+/* PAGE 3 REVIEW */
 
 
+.review-card{
+    background-color: #f0f0f0;
+    min-height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 3px;
+
+}
+
+.review-info {
+    border-bottom: 1px dotted #ccc;
+    position: relative;
+}
+
+.review-user {
+
+}
+
+.review-date{
+    position: absolute;
+    top: 0;
+    right: 0;
+
+}
+
+.review-main {
+    position: relative;
+}
+
+.active {
+    color: #dead28;
+}
+
+.review-grade{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.deactive{
+    color:  #ccc;
+}
+
+.review-content {
+    padding-top: 20px;
+}
+
+#load-more {
+}
 
 
+/* PAGE 3 MY FINANCE */
+.finance {
+    margin-bottom: 400px;
+}
+
+.nav-item{
+    width: 50%;
+    border-radius: .25rem;
+    border: 1px solid #ccc;
+}
+
+.nav-item button {
+    width: 100%;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #06ab03;
+}
+
+.finance_tabs{
+    margin-top: 3px;
+}
+
+.nav-link {
+    color: #000;
+}
+
+.nav-pills .nav-link{
+    color: #000;
+    background-color: #fff;
+}
+
+.income-card{
+    min-height: 200px;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+}
+
+.add-income_wrap {
+    text-align: center;
+}
+
+.add-income {
+    width: 100px;
+    margin-left: -30px;
+}
+
+.card-icons {
+    text-align: right;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.income-title{
+    font-size: 30px;
+    text-align: center;
+}
+
+.income-description{
+    text-align: center;
+}
+
+.income-money{
+    margin-top: auto;
+}
 
 
+.cross-icon {
+    color: red;
+    font-size: 24px;
+}
 
+.edit-icon{
+    font-size: 24px;
+    margin-right: 5px;
+}
 
+.cross-icon:hover{
+    font-weight: 600;
+}
 
+.edit-icon:hover{
+    color: green;
+}
 
+.fa-coins{
+    color: #d1b121;
+}
+
+.modal-title{
+    color: #000;
+}
 
 
 
@@ -179,6 +368,15 @@ section.main{
     .header-title{
         margin-top: 14px;
     }
+
+    .allreviews{
+        margin-top: 20px;
+    }
 }
 
+@media (max-width: 992px){
+    .register-form{
+        margin-top: 10px;
+    }
+}
 

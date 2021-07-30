@@ -5,10 +5,10 @@
                 <div class="col-md-4 col-6">
                     <h4>Навигация</h4>
                     <ul class="list-unstyled navigation">
-                        <li><a href="#">Как начать?</a></li>
-                        <li><a href="#">Мои финансы</a></li>
+                        <li><a href="{% url 'index' %}">Как начать?</a></li>
+                        <li><a href="{% url 'my_finance' %}">Мои финансы</a></li>
                         <li><a href="#">Статистика</a></li>
-                        <li><a href="#">Отзывы</a></li>
+                        <li><a href="{% url 'reviews' %}">Отзывы</a></li>
                     </ul>
                 </div>
 

@@ -7,8 +7,13 @@
 
             <div class="col-md-6 col-8">
                 <div class="header-auth">
-                    <a type="button" class="btn btn-outline-warning signin" href="#">Войти</a>
-                    <a type="button" class="btn btn-outline-warning signup" href="#">Зарегистрироваться</a>
+                    {% if request.user.is_authenticated %}
+                    <div class="username">{{ request.user.username }}</div>
+                    <a type="button" class="btn btn-outline-warning signin" href="{% url 'logout' %}">Выйти</a>
+                    {% else %}
+                    <a type="button" class="btn btn-outline-warning signin" href="{% url 'login' %}">Войти</a>
+                    <a type="button" class="btn btn-outline-warning signup" href="{% url 'register' %}">Зарегистрироваться</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

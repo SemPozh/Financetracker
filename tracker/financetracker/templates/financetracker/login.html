@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="col-md-9 main-content lil">
+    <form action="{% url 'login' %}" method="post" class="login-form">
+        {% csrf_token %}
+
+        {{ form.username }}
+
+        {{ form.password }}
+
+        {{ form.non_field_errors }}
+
+        <button type="submit" class="btn btn-warning register-btn">Войти</button>
+    </form>
+    <a href="{% url 'register' %}" class="register-link">Зарегистрироваться</a>
+
+</div>
+{% endblock %}
+

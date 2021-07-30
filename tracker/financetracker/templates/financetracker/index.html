@@ -10,7 +10,6 @@
         расходов. Ведь нет лучшего способа настроить будущее, как привести в ясность настоящее. Для работы на нашем
         сервисе вам необходимо <a href="#">зарегистрироваться</a>. Вот краткий обзор возможностей сервиса:
     </p>
-    <p>
     <ul class="explore_list">
         <li>В разделе "Мои Финансы" вы можете отслеживать свои доходы и расходы</li>
         <li>В разделе "Cтатистика" вы можете посмотреть динамические изменения ваших финансов за разные промежутки
@@ -18,20 +17,55 @@
         </li>
         <li>В разделе "Отзывы" вы можете посмотеть отзывы о нашем проекте, а также отставить свой</li>
     </ul>
-    </p>
+
 
     <h3>Мои Финансы</h3>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing, elit. Officia expedita maiores corporis harum voluptate
-        obcaecati, minus possimus, officiis adipisci reprehenderit fugit consectetur nemo accusamus accusantium a
-        deserunt excepturi, aliquid quasi?</p>
+    <p>
+        В разделе "Мои финансы" вы можете добавлять свои доходы и расходы за определённую дату, удалять и редактировать
+        их.
+    </p>
+
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'images/incomes.png' %}" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/add_finance.png' %}" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/expenses.png' %}" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
     <h3>Статистика</h3>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus quibusdam alias maxime atque omnis deserunt,
         officiis modi enim harum illum voluptates, tempora. Rem quae repellat nobis totam quis reiciendis animi!</p>
+    
 
     <h3>Отзывы</h3>
-    <p>Lorem ipsum dolor, sit, amet consectetur adipisicing elit. Porro illo, tempore voluptas nam facilis repellendus
-        inventore, iusto in dolorem voluptates sequi fuga, libero dignissimos temporibus esse ut neque culpa hic.</p>
+    <p>Вы можете ознакомиться с отзывами о нашей платформе в данном разделе. Узнавать что-то полезное от других
+        пользователей, набираться опыта - очень здорово! Также вы можете оставить свой отзыв, в котором будут вопросы,
+        пожелания и мнение о нашем сервисе. Удачной Работы!</p>
 </div>
 {% endblock %}
 

@@ -1,0 +1,19 @@
+{% if messages %}
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+              {{ message }}
+            </div>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+</section>
+{% endif %}

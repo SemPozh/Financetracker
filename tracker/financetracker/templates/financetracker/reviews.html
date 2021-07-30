@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load financetracker_tags %}
+
+{% block title %}Отзывы{% endblock %}
+
+{% block content %}
+
+
+<div class="col-md-9">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="allreviews">
+				{% for review in reviews %}
+				{% if forloop.last %}
+					<div class="review-card mb-3 shadow-sm last-post" data-postid={{ review.id }}>
+				{% else %}
+					<div class="review-card mb-3 shadow-sm">
+				{% endif %}
+						<div class="review-info">
+							<div class="review-user">
+								{{ review.user }}
+							</div>
+
+							<div class="review-date">
+								{{ review.date }}
+							</div>
+						</div>
+						<div class="review-main">
+							<div class="review-grade">
+								{% show_stars review.id %}
+							</div>
+							<div class="review-content">
+								{{review.content}}
+							</div>
+						</div>
+					</div>
+			{% endfor %}
+			</div>
+		{% if reviews.count >= 5 %}
+			<p class="text-center"><button type="button" class="btn btn-dark load-more" id="load-more">Eщё отзывы</button></p>
+		{% endif %}
+		</div>
+
+		<div class="col-md-6">
+			<form action="{% url 'reviews' %}" method="post">
+				{% csrf_token %}
+
+				{{ form.grade }}
+
+				{{ form.content }}
+
+				<button type="submit" class="btn btn-warning register-btn">Оставить отзыв</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
