@@ -8,6 +8,10 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 import datetime
 from .models import Finance
+import re
+import calendar
+from django.middleware.csrf import get_token
+
 
 
 def index(request):
@@ -113,7 +117,8 @@ def my_finance(request):
                 else:
                     messages.success(request, 'Расход добавлен')
 
-                return redirect('my_finance')
+                if 'my-finance' in request.get_full_path():
+                    return redirect('my_finance')
             else:
                 messages.error(request, 'Форма невалидна')
         else:
@@ -153,7 +158,6 @@ def redact_finance(request):
         finance_red_id = request.POST.get('finance_red_id')
         redact_finance_obj = Finance.objects.get(pk=finance_red_id)
 
-        print(request.POST)
         title = request.POST.get('redacted_title')
         money = request.POST.get('redacted_money')
         date = request.POST.get('redacted_date')
@@ -184,3 +188,152 @@ def redact_finance(request):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
+
+def statistic(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = StatisticPeriodForm(request.POST, prefix="form")
+            form1 = AddFinanceForm(request.POST, prefix="form1")
+            form2 = AddFinanceForm(request.POST, prefix="form2")
+            form3 = AddFinanceForm(request.POST, prefix="form3")
+            form4 = AddFinanceForm(request.POST, prefix="form4")
+            start_day = datetime.datetime.strptime(request.POST['form-date1'], '%Y-%m-%d')
+            end_day = datetime.datetime.strptime(request.POST['form-date2'], '%Y-%m-%d')
+            period_name = 'период'
+
+        else:
+            months = {
+                '01': 'январь',
+                '02': 'февраль',
+                '03': 'март',
+                '04': 'апрель',
+                '05': 'май',
+                '06': 'июнь',
+                '07': 'июль',
+                '08': 'август',
+                '09': 'сентябрь',
+                '10': 'октябрт',
+                '11': 'ноябрь',
+                '12': 'декабрь',
+            }
+
+            current_month = datetime.datetime.now().month
+            current_year = datetime.datetime.now().year
+            count_of_days = str(calendar.monthrange(current_year, current_month)[1])
+            if len(str(current_month)) == 1:
+                current_month = '0' + str(current_month)
+            start_day = datetime.datetime.strptime(str(current_year) + '-' + current_month + '-01', '%Y-%m-%d')
+            end_day = datetime.datetime.strptime(str(current_year) + '-' + str(current_month) + '-' + count_of_days,
+                                                 '%Y-%m-%d')
+            period_name = months[current_month]
+
+            form = StatisticPeriodForm(prefix="form")
+            form1 = AddFinanceForm(prefix="form1")
+            form2 = AddFinanceForm(prefix="form2")
+            form3 = AddFinanceForm(prefix="form3")
+            form4 = AddFinanceForm(prefix="form4")
+
+        days_count = int(re.search(r'\d+', str(end_day - start_day)).group(0)) + 1
+        all_expenses = Finance.objects.filter(date__gte=start_day, date__lte=end_day, is_income=False)
+        all_incomes = Finance.objects.filter(date__gte=start_day, date__lte=end_day, is_income=True)
+
+        expenses_money = 0
+        incomes_money = 0
+
+        for expense in all_expenses:
+            expenses_money += expense.money
+
+        for income in all_incomes:
+            incomes_money += income.money
+
+        average_day_expenses = round(int(expenses_money) / days_count, 2)
+        average_day_incomes = round(int(incomes_money) / days_count, 2)
+
+        finance_diff = incomes_money - expenses_money
+
+        context = {
+            'form': form,
+            'form1': form1,
+            'form2': form2,
+            'form3': form3,
+            'form4': form4,
+            'days_count': days_count,
+            'all_expenses': all_expenses,
+            'all_incomes': all_incomes,
+            'expenses_money': expenses_money,
+            'incomes_money': incomes_money,
+            'average_day_expenses': average_day_expenses,
+            'average_day_incomes': average_day_incomes,
+            'finance_diff': finance_diff,
+            'period_name': period_name
+        }
+
+        return render(request, 'financetracker/statistic.html', context=context)
+    else:
+        return redirect('register')
+
+
+def ajax_statistic(request):
+    if request.is_ajax():
+        start_day = datetime.datetime.strptime(request.POST['date1'], '%Y-%m-%d')
+        end_day = datetime.datetime.strptime(request.POST['date2'], '%Y-%m-%d')
+
+        days_count = int(re.search(r'\d+', str(end_day - start_day)).group(0)) + 1
+        all_expenses_list = list(Finance.objects.filter(date__gte=start_day, date__lte=end_day, is_income=False))
+        all_incomes_list = list(Finance.objects.filter(date__gte=start_day, date__lte=end_day, is_income=True))
+
+        all_expenses = []
+        for item in all_expenses_list:
+            finance_data = {
+                'id': item.id,
+                'title': item.title,
+                'money': item.money,
+                'date': item.date,
+                'description': item.description
+            }
+
+            all_expenses.append(finance_data)
+
+        all_incomes = []
+        for item in all_incomes_list:
+            finance_data = {
+                'id': item.id,
+                'title': item.title,
+                'money': item.money,
+                'date': item.date,
+                'description': item.description
+            }
+
+            all_incomes.append(finance_data)
+
+        expenses_money = 0
+        incomes_money = 0
+
+        for expense in all_expenses_list:
+            expenses_money += expense.money
+
+        for income in all_incomes_list:
+            incomes_money += income.money
+
+        average_day_expenses = round(int(expenses_money) / days_count, 2)
+        average_day_incomes = round(int(incomes_money) / days_count, 2)
+
+        finance_diff = incomes_money - expenses_money
+
+        token = get_token(request)
+        csrf_token_html = '<input type="hidden" name="csrfmiddlewaretoken" value="{}" />'.format(token)
+
+        data = {
+            'csrf_token_html': csrf_token_html,
+            'days_count': days_count,
+            'all_expenses': all_expenses,
+            'all_incomes': all_incomes,
+            'expenses_money': expenses_money,
+            'incomes_money': incomes_money,
+            'average_day_expenses': average_day_expenses,
+            'average_day_incomes': average_day_incomes,
+            'finance_diff': finance_diff,
+        }
+
+        return JsonResponse(data)

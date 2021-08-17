@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% block title %}Статистика{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="col-md-9">
+	<h2 class="statistic-title">Статистика за {{ period_name }}</h2>
+	<form action="{% url 'statistic' %}" method="post" class="row period_form">
+		{% csrf_token %}
+		<div class="date1 col-md-6">{{ form.date1 }}</div>
+		<div class="date2 col-md-6">{{ form.date2 }}</div>
+	</form>
+
+	<div class="statistic-content">
+		<table class=" table table-info table-striped">
+			<thead>
+				<tr class="text-center">
+					<th>Параметр</th>
+					<th>Значение</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="text-center">
+					<td>Кол-во дней</td>
+					<td class="days_count">{{ days_count }}</td>
+				</tr>
+
+				<tr class="text-center">
+					<td>Расходы</td>
+					<td class="expenses_money">{{expenses_money}} р</td>
+				</tr>
+
+				<tr class="text-center">
+					<td>Доходы</td>
+					<td class="incomes_money">{{ incomes_money }} р</td>
+				</tr>
+
+				<tr class="text-center">
+					<td>Средние расходы за день</td>
+					<td class="average_day_expenses">{{average_day_expenses}} р</td>
+				</tr>
+
+				<tr class="text-center">
+					<td>Средние доходы за день</td>
+					<td class="average_day_incomes">{{average_day_incomes}} р</td>
+				</tr>
+
+				<tr class="text-center">
+					<td>Прибыль</td>
+					<td class="finance_diff">{{finance_diff}} р</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+
+	<div class="finance_tabs">
+		<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="pills-income-tab" data-bs-toggle="pill"
+				data-bs-target="#pills-income" type="button" role="tab" aria-controls="pills-income"
+				aria-selected="true">ДОХОДЫ
+			</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-expenses-tab" data-bs-toggle="pill"
+			data-bs-target="#pills-expenses" type="button" role="tab" aria-controls="pills-expenses"
+			aria-selected="false">РАСХОДЫ
+		</button>
+	</li>
+</ul>
+
+<div class="tab-content" id="pills-tabContent">
+	<div class="tab-pane fade show active" id="pills-income" role="tabpanel"
+	aria-labelledby="pills-income-tab">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="all_incomes">
+				{% for income in all_incomes %}
+				<div class="income-card mb-3 shadow-sm row" id="{{ income.id }}">
+					<div class="col-md-2 col-3 income-date" data-value="{{ income.date }}">
+						{{ income.date }}
+					</div>
+					<div class="col-md-8 col-6 income-title" data-value="{{ income.title }}">
+						{{ income.title }}
+					</div>
+					<div class="col-md-2 col-3 card-icons">
+						<i class="fas fa-pencil-alt edit-icon" data-bs-toggle="modal"
+						data-bs-target="#editModal{{ income.id }}" redact_id="{{ income.id }}"></i>
+						<i class="far fa-times-circle cross-icon" delete_id="{{ income.id }}"></i>
+
+						<!-- Modal -->
+						<div class="modal fade" id="editModal{{ income.id }}" tabindex="-1"
+						aria-labelledby="editModal{{ income.id }}Label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Редактировать
+									доход</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form action="{% url 'redact_finance' %}"
+									id="redact_form_{{ income.id }}" method="post"
+									class="redact_form3_{{ income.id }}" name="redact_form">
+									{% csrf_token %}
+									{{ form3.title }}
+									{{ form3.money }}
+									{{ form3.date }}
+									{{ form3.description }}
+
+									<input type="hidden" name="is_income" value="True"
+									data_financeId="{{ income.id }}">
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Закрыть
+									</button>
+									<button type="submit"
+									class="btn btn-warning redact-btn">Сохранить
+									изменения
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="income-description col-12" data-value="{{ income.description }}">
+		{{ income.description }}
+	</div>
+	<div class="income-money col-md-4" data-value="{{ income.money }}">
+		{{ income.money }} р
+		<i class="fas fa-coins"></i>
+	</div>
+</div>
+{% endfor %}
+</div>
+
+<div class="add-income_wrap">
+	<button type="button" class="btn btn-warning add-income" data-bs-toggle="modal"
+	data-bs-target="#exampleModal"><i class="fas fa-plus"></i></button>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Добавить доход</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal"
+			aria-label="Close"></button>
+		</div>
+
+		<div class="modal-body">
+			<form action="{% url 'my_finance' %}" method="post">
+				{% csrf_token %}
+				{{ form1.title }}
+				{{ form1.money }}
+				{{ form1.date }}
+
+				{{ form1.description }}
+
+
+				<input type="hidden" name="is_income" value="True">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Закрыть
+				</button>
+				<button type="submit" class="btn btn-warning">Сохранить</button>
+			</div>
+		</form>
+
+	</div>
+
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<div class="tab-pane fade" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="all_incomes">
+				{% for expense in all_expenses %}
+				<div class="income-card mb-3 shadow-sm row" id="{{ expense.id }}">
+					<div class="col-md-2 col-3 income-date" data-value="{{ expense.date }}">
+						{{ expense.date }}
+					</div>
+					<div class="col-md-8 col-6 income-title" data-value="{{ expense.title }}">
+						{{ expense.title }}
+					</div>
+					<div class="col-md-2 col-3 card-icons">
+						<i class="fas fa-pencil-alt edit-icon" redact_id="{{ expense.id }}"
+						data-bs-toggle="modal" data-bs-target="#editModal{{ expense.id }}"></i>
+						<i class="far fa-times-circle cross-icon" delete_id="{{ expense.id }}"></i>
+
+						<!-- Modal -->
+						<div class="modal fade" id="editModal{{ expense.id }}" tabindex="-1"
+						aria-labelledby="editModal{{ expense.id }}Label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Редактировать
+									расход</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form action="{% url 'redact_finance' %}" method="post"
+									id="redact_form_{{ expense.id }}"
+									class="redact_form4_{{ expense.id }}" name="redact_form">
+									{% csrf_token %}
+
+									{{ form4.title }}
+									{{ form4.money }}
+									{{ form4.date }}
+									{{ form4.description }}
+
+									<input type="hidden" name="is_income" value="False"
+									data_financeId="{{ expense.id }}">
+
+									<div class="modal-footer">
+										<button type="button"
+										class="btn btn-secondary close_btn"
+										data-bs-dismiss="modal">Закрыть
+									</button>
+									<button type="submit"
+									class="btn btn-warning redact-btn">Сохранить
+									изменения
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="income-description col-12" data-value="{{ expense.description }}">
+		{{ expense.description }}
+	</div>
+	<div class="income-money col-md-4" data-value="{{ expense.money }}">
+		{{ expense.money }} р
+		<i class="fas fa-coins"></i>
+	</div>
+</div>
+{% endfor %}
+</div>
+
+
+<div class="add-income_wrap">
+	<button type="button" class="btn btn-warning add-income" data-bs-toggle="modal"
+	data-bs-target="#exampleModal2"><i class="fas fa-plus"></i></button>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1"
+aria-labelledby="exampleModalLabel2" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel2">Добавить Расход</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal"
+			aria-label="Close"></button>
+		</div>
+
+		<div class="modal-body">
+			<form action="{% url 'my_finance' %}" method="post">
+				{% csrf_token %}
+				{{ form2.title }}
+				{{ form2.money }}
+				{{ form2.date }}
+
+				{{ form2.description }}
+				<input type="hidden" name="is_income" value="False">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Закрыть
+				</button>
+				<button type="submit" class="btn btn-warning">Сохранить</button>
+			</div>
+		</form>
+
+	</div>
+
+
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

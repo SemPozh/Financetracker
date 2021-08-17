@@ -199,7 +199,6 @@ function delete_finance(){
 				},
 
 				success: (data) =>{
-					console.log(data);
 
 					$('#' + finance_id).remove();
 				}
@@ -238,7 +237,6 @@ function show_finance_data() {
 
 			if (is_red_income == "True"){
 				var redact_form = $('.redact_form3_' + redact_id)[0];
-				console.log(redact_form);
 
 				var input1 = $(redact_form).find('[name="form3-title"]')[0];
 				$(input1).attr('value', redact_title);
@@ -332,6 +330,201 @@ function redact_finance(){
 }
 
 
+
+function show_statistic_period() {
+	months = {
+		'0': 31,
+		'1': 28,
+		'2': 31,
+		'3': 30,
+		'4': 31,
+		'5': 30,
+		'6': 31,
+		'7': 31,
+		'8': 30,
+		'9': 31,
+		'10': 30,
+		'11': 31
+	}
+
+	var current_date = new Date()
+	var current_month = current_date.getMonth();
+	var current_year = current_date.getFullYear()
+	date1 = new Date(current_year, current_month, 2).toISOString();
+	date2 = new Date(current_year, current_month, months[current_month] + 1).toISOString();
+
+	$('.date1_inp').attr('value', date1.slice(0, 10));
+	$('.date2_inp').attr('value', date2.slice(0, 10));
+}
+
+
+function get_period_statistic() {
+	$('.period_form').each((index, el) =>{
+		$(el).on('input', (e) => {
+			e.preventDefault();
+
+			var input1 = $(el).find('.date1_inp').val();
+			var input2 = $(el).find('.date2_inp').val();
+			$.ajax({
+				method: 'POST',
+				dataType: 'json',
+				url: '/ajax_statistic/',
+				data: {
+					'date1': input1,
+					'date2': input2
+				},
+
+				success: (data) => {
+
+					$('.days_count').empty().append(data['days_count']);
+					$('.expenses_money').empty().append(data['expenses_money']);
+					$('.incomes_money').empty().append(data['incomes_money']);
+					$('.average_day_expenses').empty().append(data['average_day_expenses']);
+					$('.average_day_incomes').empty().append(data['average_day_incomes']);
+					$('.finance_diff').empty().append(data['finance_diff']);
+
+					$('.statistic-title').empty().append('Статистика за период')
+
+
+
+					var all_expenses_wrap = $('.all_incomes')[1];
+					$(all_expenses_wrap).empty();
+					for (var j=0; j<data['all_expenses'].length; j++){
+						$(all_expenses_wrap).append(
+							'<div class="income-card mb-3 shadow-sm row" id="' + data['all_expenses'][j]['id'] + '">\
+							<div class="col-md-2 col-3 income-date" data-value="' + data['all_expenses'][j]['date'] + '">\
+							' + data['all_expenses'][j]['date'] + '\
+							</div>\
+							<div class="col-md-8 col-6 income-title" data-value="' + data['all_expenses'][j]['title'] + '">\
+							' + data['all_expenses'][j]['title'] + '\
+							</div>\
+							<div class="col-md-2 col-3 card-icons">\
+							<i class="fas fa-pencil-alt edit-icon" redact_id="' + data['all_expenses'][j]['id'] + '"\
+							data-bs-toggle="modal" data-bs-target="#editModal' + data['all_expenses'][j]['id'] + '"></i>\
+							<i class="far fa-times-circle cross-icon" delete_id="' + data['all_expenses'][j]['id'] + '"></i>\
+							<!-- Modal -->\
+							<div class="modal fade" id="editModal' + data['all_expenses'][j]['id'] + '" tabindex="-1"\
+							aria-labelledby="editModal' + data['all_expenses'][j]['id'] + 'Label" aria-hidden="true">\
+							<div class="modal-dialog">\
+							<div class="modal-content">\
+							<div class="modal-header">\
+							<h5 class="modal-title" id="exampleModalLabel">Редактировать\
+							расход</h5>\
+							<button type="button" class="btn-close" data-bs-dismiss="modal"\
+							aria-label="Close"></button>\
+							</div>\
+							<div class="modal-body">\
+							<form action="/redact_finance/" method="post"\
+							id="redact_form_' + data['all_expenses'][j]['id'] + '"\
+							class="redact_form4_' + data['all_expenses'][j]['id'] + '" name="redact_form">' + 
+							data['csrf_token_html'] + 
+							'<input type="text" name="form4-title" class="form-control" placeholder="Название" required id="id_form4-title">\
+							<input type="number" name="form4-money" class="form-control" placeholder="Цена" required id="id_form4-money">\
+							<input type="date" name="form4-date" class="form-control" required id="id_form4-date">\
+							<textarea name="form4-description" cols="40" rows="2" class="form-control" placeholder="Описание" required id="id_form4-description"></textarea>\
+							<input type="hidden" name="is_income" value="False"\
+							data_financeId="' + data['all_expenses'][j]['id'] + '">\
+							<div class="modal-footer">\
+							<button type="button"\
+							class="btn btn-secondary close_btn"\
+							data-bs-dismiss="modal">Закрыть\
+							</button>\
+							<button type="submit"\
+							class="btn btn-warning redact-btn">Сохранить\
+							изменения\
+							</button>\
+							</div>\
+							</form>\
+							</div>\
+							</div>\
+							</div>\
+							</div>\
+							</div>\
+							<div class="income-description col-12" data-value="' + data['all_expenses'][j]['description'] + '">\
+							' + data['all_expenses'][j]['description'] + '\
+							</div>\
+							<div class="income-money col-md-4" data-value="' + data['all_expenses'][j]['money'] + '">\
+							' + data['all_expenses'][j]['money'] + ' р\
+							<i class="fas fa-coins"></i>\
+							</div>\
+							</div>'
+							);
+
+					}
+					var all_incomes_wrap = $('.all_incomes')[0];
+					$(all_incomes_wrap).empty();
+					for (var i=0; i<data['all_incomes'].length; i++){
+						$(all_incomes_wrap).append(
+							'<div class="income-card mb-3 shadow-sm row" id="' + data['all_incomes'][i]['id'] + '">\
+							<div class="col-md-2 col-3 income-date" data-value="' + data['all_incomes'][i]['date'] + '">\
+							' + data['all_incomes'][i]['date'] + '\
+							</div>\
+							<div class="col-md-8 col-6 income-title" data-value="' + data['all_incomes'][i]['title'] + '">\
+							' + data['all_incomes'][i]['title'] + '\
+							</div>\
+							<div class="col-md-2 col-3 card-icons">\
+							<i class="fas fa-pencil-alt edit-icon" data-bs-toggle="modal"\
+							data-bs-target="#editModal' + data['all_incomes'][i]['id'] + '" redact_id="' + data['all_incomes'][i]['id'] + '"></i>\
+							<i class="far fa-times-circle cross-icon" delete_id="' + data['all_incomes'][i]['id']+ '"></i>\
+							<!-- Modal -->\
+							<div class="modal fade" id="editModal' + data['all_incomes'][i]['id'] + '" tabindex="-1"\
+							aria-labelledby="editModal' + data['all_incomes'][i]['id'] + 'Label" aria-hidden="true">\
+							<div class="modal-dialog">\
+							<div class="modal-content">\
+							<div class="modal-header">\
+							<h5 class="modal-title" id="exampleModalLabel">Редактировать\
+							доход</h5>\
+							<button type="button" class="btn-close" data-bs-dismiss="modal"\
+							aria-label="Close"></button>\
+							</div>\
+							<div class="modal-body">\
+							<form action="/redact_finance/"\
+							id="redact_form_' + data['all_incomes'][i]['id'] + '" method="post"\
+							class="redact_form3_' + data['all_incomes'][i]['id'] + '" name="redact_form">' +
+							data['csrf_token_html'] + 
+							'<input type="text" name="form3-title" class="form-control" placeholder="Название" required id="id_form3-title">\
+							<input type="number" name="form3-money" class="form-control" placeholder="Цена" required id="id_form3-money">\
+							<input type="date" name="form3-date" class="form-control" required id="id_form3-date">\
+							<textarea name="form3-description" cols="40" rows="2" class="form-control" placeholder="Описание" required id="id_form3-description"></textarea>\
+							<input type="hidden" name="is_income" value="True"\
+							data_financeId="' + data['all_incomes'][i]['id'] + '">\
+							<div class="modal-footer">\
+							<button type="button" class="btn btn-secondary"\
+							data-bs-dismiss="modal">Закрыть\
+							</button>\
+							<button type="submit"\
+							class="btn btn-warning redact-btn">Сохранить\
+							изменения\
+							</button>\
+							</div>\
+							</form>\
+							</div>\
+							</div>\
+							</div>\
+							</div>\
+							</div>\
+							<div class="income-description col-12" data-value="' + data['all_incomes'][i]['description'] + '">\
+							' + data['all_incomes'][i]['description'] + '\
+							</div>\
+							<div class="income-money col-md-4" data-value="' + data['all_incomes'][i]['money'] + '">\
+							' + data['all_incomes'][i]['money'] + ' р\
+							<i class="fas fa-coins"></i>\
+							</div>\
+							</div>'
+							);
+					}
+
+					redact_finance();
+					show_finance_data();
+					delete_finance();
+				}
+			})
+		});
+	});
+}
+
+
+
 $(document).ready(() =>{
 	csrf();
 
@@ -340,4 +533,6 @@ $(document).ready(() =>{
 	delete_finance();
 	show_finance_data();
 	redact_finance();
+	show_statistic_period();
+	get_period_statistic();
 });

@@ -11,5 +11,7 @@ urlpatterns = [
     path('my-finance/', my_finance, name='my_finance'),
     path('delete_finance/', csrf_exempt(delete_finance),  name='delete_finance'),
     path('redact_finance/', redact_finance, name='redact_finance'),
-    path('logout/', user_logout, name='logout')
+    path('logout/', user_logout, name='logout'),
+    path('statistic/', statistic, name='statistic'),
+    path('ajax_statistic/', ajax_statistic, name='ajax_statistic')
 ]

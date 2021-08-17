@@ -41,3 +41,7 @@ class AddFinanceForm(forms.Form):
     description = forms.CharField(label='Описание', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Описание', 'rows': 2}))
 
 
+class StatisticPeriodForm(forms.Form):
+    date1 = forms.DateField(label='Начальная дата', widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control date1_inp'}))
+    date2 = forms.DateField(label='Конечная дата', widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control date2_inp'}))
+
